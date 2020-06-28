@@ -1,0 +1,41 @@
+.cardViewer {
+  text-align: center;
+  margin-top: 3em;
+}
+
+.container {
+  text-align: center;
+}
+
+.card {
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  padding-top: 80px;
+  border-radius: 5px;
+  text-align: center;
+  height: 200px;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.buttons {
+  padding: 50px;
+}
+
+.arrows {
+  background: transparent;
+  border: none !important;
+  font-size:0;
+  outline: none;
+}
+
+.arrows:hover {
+  color: gray; /* Green */
+}
+
+h2, h3, h4, p {
+  font-family: sans-serif;
+  font: helvetica;
+  font-style: normal;
+}

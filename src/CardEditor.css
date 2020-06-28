@@ -1,0 +1,24 @@
+.cardEditor {
+  text-align: center;
+  margin-top: 3em;
+}
+
+table,
+td,
+th {
+  border: 1px solid black;
+  font-family: sans-serif;
+  font: helvetica;
+  font-style: normal;
+}
+
+table {
+  border-collapse: collapse;
+  text-align: center;
+  margin: auto;
+}
+
+td,
+th {
+  padding: 10px;
+}

@@ -10,8 +10,9 @@ import {
   firebaseReducer
 } from 'react-redux-firebase'
 import { BrowserRouter } from 'react-router-dom';
-import { composeWithDevTools } from 'redux-devtools-extension'
-import 'firebase/database'
+import { composeWithDevTools } from 'redux-devtools-extension';
+import 'firebase/database';
+import 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAu8svtFE47WsWaIJGfptFhvjfenqnL3ZE",
@@ -39,6 +40,7 @@ const store = createStore(rootReducer, composeWithDevTools())
 //simplest, starter configuration, store users under userProfile
 // react-redux-firebase config
 const rrfConfig = {
+  preserveOnLogout: ['homepage'],
   userProfile: 'users'
   // useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
   // enableClaims: true // Get custom claims along with the profile

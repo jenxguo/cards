@@ -2,7 +2,7 @@ import React from 'react';
 import './CardViewer.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Link, withRouter} from 'react-router-dom';
-import {firebaseConnect, isLoaded, isEmpty} from 'react-redux-firebase';
+import {firebaseConnect, isLoaded, isEmpty, populate} from 'react-redux-firebase';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 
@@ -68,6 +68,7 @@ class CardViewer extends React.Component {
     return (
       <div className='cardViewer'>
         <h2>{this.props.name}</h2>
+        <p>Created by {this.props.owner.owner.username}</p>
           <div className='container'>
             <div onClick={this.switchSide} className='card'>
               {card}
@@ -96,21 +97,30 @@ class CardViewer extends React.Component {
 //change state with on change then pass state back into value of input
 
 //need access to props here (deckid from url in app.js)
+
+const populates = [
+  {child: 'owner', root: 'users'}
+]
+
 const mapStateToProps = (state, props) => {
-  console.log(state);
   const deck = state.firebase.data[props.match.params.deckId];
   //cant access these if deck is undefined so use &&, so if deck is undefined, wont even try to eval deck.name
   const name = deck && deck.name;
   const cards = deck && deck.cards;
   //keep these prop names similar to whats in state
-  return {cards: cards, name: name};
+  const owner = deck && populate(state.firebase, `${props.match.params.deckId}`, populates);
+  console.log(owner)
+  return {
+    cards: cards,
+    name: name,
+    owner: owner,
+  };
 }
 
 export default compose(
   withRouter,
   firebaseConnect(props => {
-    console.log('props', props);
     const deckId = props.match.params.deckId;
-    return [{path: `/flashcards/${deckId}`, storeAs: deckId}];
+    return [{path: `/flashcards/${deckId}`, storeAs: deckId, populates: populates}];
   }),
   connect(mapStateToProps))(CardViewer);

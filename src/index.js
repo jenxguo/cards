@@ -13,6 +13,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import 'firebase/database';
 import 'firebase/auth';
+import 'firebase/functions';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAu8svtFE47WsWaIJGfptFhvjfenqnL3ZE",
@@ -25,6 +26,8 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+//saying we are currently using an emulator to test functions, so look at 5001 for cloud functions
+//firebase.functions().useFunctionsEmulator('http://localhost:5001')
 
 // Add firebase to reducers
 //says HOW to store information in the redux store

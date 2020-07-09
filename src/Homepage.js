@@ -6,56 +6,58 @@ import {firebaseConnect, isLoaded, isEmpty} from 'react-redux-firebase';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 
-const Homepage = props =>  {
-
-  if (!isLoaded(props.names)) {
-    return <div>Loading...</div>
+class Homepage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
   }
 
-  if (isEmpty(props.names)) {
-    return <div>Page not found</div>
+
+  //life cycle function, called immediately when component inserted into react tree, gonna get run immediately
+  //external network requests here immediately
+  //now u can just use getHomepage as a normal function!!! w/ homepage
+  async componentDidMount() {
+      const getHomepage = this.props.firebase.functions().httpsCallable('getHomepage');
+      const homepage = await getHomepage();
+      this.setState({homepage: homepage.data})
   }
 
-  const yours = Object.keys(props.names).map(id => {
-    if (props.names[id]['owner'] == props.uid) {
+  render() {
+    if (!isLoaded(this.state.homepage)) {
+      return <div>Loading...</div>
+    }
+
+    if (isEmpty(this.state.homepage)) {
+      return <div>Page not found</div>
+    }
+
+    const visible = Object.keys(this.state.homepage).map(deckId => {
+      const deck = this.state.homepage[deckId];
       return (
-        <div>
-        <Link to={`/viewer/${id}`}>{props.names[id]['name']}</Link><br/>
+        <div key={deckId}>
+        <Link to={`/viewer/${deckId}`}>{deck.name}</Link><br/>
         </div>
       );
-    }
-  })
+    })
 
-  const pub = Object.keys(props.names).map(id => {
-    if (!props.names[id]['private']) {
-      return (
-        <div>
-        <Link to={`/viewer/${id}`}>{props.names[id]['name']}</Link><br/>
-        </div>
-      );
-    }
-  })
-
-  return(
-    <div className="homepage">
-      <h2>Welcome!</h2>
-      <h5>Create new flashcards with the <Link to="/editor">Card Editor</Link>.</h5>
-      <br/>
-      <h5>Your Card Decks:</h5>
-      {yours}
-      <br/>
-      <h5>Public Card Decks:</h5>
-      {pub}
-    </div>
-  )
+    return(
+      <div className="homepage">
+        <h2>Welcome!</h2>
+        <h5>Create new flashcards with the <Link to="/editor">Card Editor</Link>.</h5>
+        <br/>
+        <h5>Card Decks:</h5>
+        {visible}
+      </div>
+    )
+  }
 }
 
-const mapStateToProps = (state, props) => {
-  return {
-    names: state.firebase.data.homepage,
-    email: state.firebase.auth.email,
-    isLoggedIn: state.firebase.auth.uid
-  };
+  const mapStateToProps = (state, props) => {
+    return {
+      email: state.firebase.auth.email,
+      isLoggedIn: state.firebase.auth.uid
+    };
 }
+
 
 export default compose(firebaseConnect(['/homepage']), (connect(mapStateToProps)))(Homepage);
